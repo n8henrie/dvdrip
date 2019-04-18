@@ -59,3 +59,8 @@ pipe to `tail -n 1`" seems super hacky.
 requires root permissions, so the Makefile puts it at a static location,
 changes it to `0700 root:root`, then outputs the sha256 for a little extra
 security when setting it as a `NOPASSWD` executable.
+
+## License
+
+The portions of this project that I have written are available under the MIT
+license.
