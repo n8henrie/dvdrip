@@ -34,15 +34,15 @@ DVD collection.
 username ALL=(ALL) NOPASSWD: sha256:HASHGOESHERE /usr/local/bin/handbraker.sh
 ```
 
-The udev rule will automatically invoke `autorip.service` when a DVD is
-inserted into the drive. This will send a warning to the prompt that a DVD rip
-will begin in 60 seconds if the process isn't stopped (e.g. `sudo systemctl
-stop autorip.service`). At that point, the DVD is ripped, renamed, and
-transfered per the settings above.
+The udev rule will automatically invoke `dvdrip@bluray.service` (or
+`dvdrip@dvd.service`) when a DVD is inserted into the drive. This will send a
+warning to the prompt that a DVD rip will begin in 60 seconds if the process
+isn't stopped (e.g. `sudo systemctl kill dvdrip@bluray.service`). At that
+point, the DVD is ripped, renamed, and transfered per the settings above.
 
 `videomd.sh` can be used as a script independently to set metadata. If you run
 `./videomd.sh myfile.mp4`, it will use the filename and set metadata based on
-the most popular searc result. If you instead run `./videomd.sh -s
+the most popular search result. If you instead run `./videomd.sh -s
 myfile.mp4` or `./videomd.sh -s "my query here"`, it will instead display the
 top page of results for you, from which you can manually choose an `id` and
 then run with `./videomd.sh -i THE_ID myfile.mp4`.
