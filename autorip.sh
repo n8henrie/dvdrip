@@ -45,4 +45,4 @@ if [ -n "${DVDRIP_CHOWN-}" ]; then
   chown "$DVDRIP_CHOWN:$DVDRIP_CHOWN" -- "$new_file"
 fi
 
-rsync "${RSYNC_SSH_OPTS[@]}" "$new_file" "$RSYNC_DEST"
+rsync --archive "${RSYNC_SSH_OPTS[@]}" "$new_file" "$RSYNC_DEST"
