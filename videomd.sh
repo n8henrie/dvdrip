@@ -96,6 +96,10 @@ while getopts 's:i:' OPTION; do
 done
 shift $((OPTIND - 1))
 
+if [ ! -n "${1-}" ]; then
+  usage
+fi
+
 filename=$1
 id=${id-"$(get_movie_ids | jq --raw-output '.[0].id')"}
 if [ "$id" = "null" ]; then
