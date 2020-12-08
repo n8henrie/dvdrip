@@ -1,6 +1,7 @@
 #!/bin/bash
 
-set -euf -o pipefail
+set -Eeuf -o pipefail
+set -x
 
 fallback() {
   if [ "${MEDIATYPE,,}" = "bluray" ]; then
@@ -39,7 +40,9 @@ esac
 # No longer try to fallback rip the whole dvd, since it seems that part worked
 trap "" ERR
 
-chown n8henrie:n8henrie -- "$new_file"
 chmod 0644 -- "$new_file"
+if [ -n "${DVDRIP_CHOWN-}" ]; then
+  chown "$DVDRIP_CHOWN:$DVDRIP_CHOWN" -- "$new_file"
+fi
 
-rsync -avz --progress --remove-source-files "${RSYNC_SSH_OPTS[@]}" "$new_filename" "$RSYNC_DEST"
+rsync "${RSYNC_SSH_OPTS[@]}" "$new_file" "$RSYNC_DEST"
