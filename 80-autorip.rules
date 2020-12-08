@@ -1,2 +1,5 @@
 # https://www.reddit.com/r/commandline/comments/8ezevx/udev_only_when_cddvd_inserted/
-KERNEL=="sr0", ACTION=="change", ENV{ID_CDROM_MEDIA}=="1", ENV{ID_CDROM_MEDIA_STATE}!="blank", RUN+="/bin/systemctl start autorip.service"
+# ID_CDROM_MEDIA is set by udev
+KERNEL=="sr0", ACTION=="change", ENV{ID_CDROM_MEDIA_DVD}=="1", ENV{ID_CDROM_MEDIA_STATE}!="blank", RUN+="/bin/systemctl start dvdrip@dvd.service"
+KERNEL=="sr0", ACTION=="change", ENV{ID_CDROM_MEDIA_BD}=="1", ENV{ID_CDROM_MEDIA_STATE}!="blank", RUN+="/bin/systemctl start dvdrip@bluray.service"
+# KERNEL=="sr0", ACTION=="change", ENV{ID_CDROM_MEDIA_CD}=="1", ENV{ID_CDROM_MEDIA_STATE}!="blank", RUN+="/bin/systemctl start dvdrip.service"
