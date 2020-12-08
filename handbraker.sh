@@ -4,7 +4,6 @@
 # https://willhaley.com/blog/default-foreign-soft-subtitle-support-in-plex-using-handbrake/
 
 set -Eeuf -o pipefail
-set -x
 
 finish() {
   /bin/noti --pushover --file /home/"$SUDO_USER"/.config/noti/noti.yaml || :

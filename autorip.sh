@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -Eeuf -o pipefail
-set -x
 
 fallback() {
   if [ "${MEDIATYPE,,}" = "bluray" ]; then

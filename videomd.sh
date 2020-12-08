@@ -4,7 +4,6 @@
 # Export your themoviedb api key to TMDB_API_KEY
 
 set -Eeuf -o pipefail
-set -x
 
 DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$DIR"/config.env
