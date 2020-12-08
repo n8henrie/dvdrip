@@ -1,6 +1,9 @@
 SHELL := /bin/bash
 PWD := $(shell pwd)
 
+help:
+	@awk '/^[^ \t]*:/ { gsub(":.*", ""); print }' Makefile
+
 install:
 	cp -i 80-autorip.rules /etc/udev/rules.d/
 	cp -i handbraker.sh /usr/local/bin/
