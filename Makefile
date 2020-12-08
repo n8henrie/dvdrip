@@ -4,6 +4,10 @@ PWD := $(shell pwd)
 help:
 	@awk '/^[^ \t]*:/ { gsub(":.*", ""); print }' Makefile
 
+dependencies:
+	sudo pacman -S handbrake-cli jq atomicparsley
+	yay -S makemkv-cli
+
 install:
 	cp -i 80-autorip.rules /etc/udev/rules.d/
 	cp -i handbraker.sh /usr/local/bin/
