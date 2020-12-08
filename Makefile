@@ -27,3 +27,5 @@ uninstall:
 		/usr/local/bin/handbraker.sh \
 		/etc/systemd/system/dvdrip@.service \
 		/etc/udev/rules.d/80-autorip.rules
+
+.PHONY: help dependencies install uninstall
