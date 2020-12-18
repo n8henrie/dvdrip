@@ -33,7 +33,8 @@ clean_title() {
 }
 
 get_artwork() {
-  local filename="${1//\//}" # Remove any slashes
+  local filename tmpdir base_url
+  filename="${1//\//}" # Remove any slashes
   tmpdir="$(mktemp -d)"
   base_url="$(curl --silent --get --data "api_key=$API_KEY" 'https://api.themoviedb.org/3/configuration' | jq --raw-output '.images.secure_base_url')"
   curl -s "${base_url}/original/${filename}" --output "${tmpdir}/${filename}"
@@ -46,12 +47,13 @@ clean_metadata() {
 }
 
 get_movie_ids() {
+  local title
   title="$(clean_title "${search_string-"$filename"}")"
-  ids="$(curl --silent --get --data api_key="$API_KEY" --data-urlencode "query=$title" 'https://api.themoviedb.org/3/search/movie' | jq '.results | sort_by(-.popularity)')"
-  echo "$ids"
+  curl --silent --get --data api_key="$API_KEY" --data-urlencode "query=$title" 'https://api.themoviedb.org/3/search/movie' | jq '.results | sort_by(-.popularity)'
 }
 
 set_metadata() {
+  local json description title year longdesc genre stik Rating artist artwork
   json="$(curl --silent --get --data api_key="$API_KEY" -d 'append_to_response=credits,images,releases' 'https://api.themoviedb.org/3/movie/'"$id")"
 
   description="$(jq --raw-output '.overview' <<< "$json")"
@@ -80,39 +82,44 @@ set_metadata() {
   new_filename="${title}.$ext"
 }
 
-while getopts 's:i:' OPTION; do
-  case "$OPTION" in
-    s)
-      search_string="$OPTARG"
-      get_movie_ids | jq
-      exit
-      ;;
-    i) id="$OPTARG" ;;
-    *)
-      usage
-      exit 1
-      ;;
-  esac
-done
-shift $((OPTIND - 1))
+main() {
+  local filename id
+  while getopts 's:i:' OPTION; do
+    case "$OPTION" in
+      s)
+        search_string="$OPTARG"
+        get_movie_ids
+        exit
+        ;;
+      i) id="$OPTARG" ;;
+      *)
+        usage
+        exit 1
+        ;;
+    esac
+  done
+  shift $((OPTIND - 1))
 
-if [ ! -n "${1-}" ]; then
-  usage
-fi
+  if [ -z "${1-}" ]; then
+    usage
+  fi
 
-filename=$1
-id=${id-"$(get_movie_ids | jq --raw-output '.[0].id')"}
-if [ "$id" = "null" ]; then
-  echo "No movie found"
+  filename=$1
+  id=${id-"$(get_movie_ids | jq --raw-output '.[0].id')"}
+  if [ "$id" = "null" ]; then
+    echo >&2 "No movie found"
 
-  # Pass on to next script
-  echo "$filename"
-  exit 0
-fi
-clean_metadata >&2
-set_metadata >&2
+    # Pass filename on for the rest of the script
+    echo "$filename"
+    exit 1
+  fi
+  clean_metadata >&2
+  set_metadata >&2
 
-mv "$filename" "$DEST/$new_filename" || true
+  # mv gives an error if the new and old file are the same
+  mv --no-clobber "$filename" "$DEST/$new_filename"
 
-# Pass filename onto next script
-echo "$DEST/$new_filename"
+  # Pass filename onto next script
+  echo "$DEST/$new_filename"
+}
+main "$@"
