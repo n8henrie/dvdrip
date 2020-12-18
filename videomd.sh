@@ -84,7 +84,7 @@ while getopts 's:i:' OPTION; do
   case "$OPTION" in
     s)
       search_string="$OPTARG"
-      get_movie_ids | jq --color-output
+      get_movie_ids | jq
       exit
       ;;
     i) id="$OPTARG" ;;
