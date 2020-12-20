@@ -22,6 +22,8 @@ main() {
 
   MEDIATYPE="$1"
   QUALITY=${2-default}
+  # Priority: CLI > config.env > default
+  QUALITY=${2-${DVDRIP_QUALITY-default}}
 
   cd "$(mktemp -d)"
   case "${MEDIATYPE,,}" in
