@@ -20,10 +20,11 @@ main() {
   DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
   source "$DIR"/config.env
 
-  MEDIATYPE="$1"
-  QUALITY=${2-default}
+  MEDIATYPE=${1,,}
+
   # Priority: CLI > config.env > default
   QUALITY=${2-${DVDRIP_QUALITY-default}}
+  QUALITY=${QUALITY,,}
 
   cd "$(mktemp -d)"
   case "${MEDIATYPE,,}" in
